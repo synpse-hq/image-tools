@@ -26,3 +26,7 @@ make generate-image
 
 Note: Once you start your device, bootstrapping happens in order:
 1. Configure Wifi network
+1. Configure Synpse agent bootstrap
+1. Reboot
+1. Bootstrap synpse
+1. Install container runtime and unattended-upgrades
