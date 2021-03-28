@@ -5,22 +5,22 @@ write_files:
     #!/bin/bash
     set -e
 
+    # This is in the wrong place
+    netplan apply
+
     # Installs Synpse
     if [ $(systemctl is-active synpse-agent) != "active" ]
     then
-       curl --retry 10 --retry-delay 60 --retry-connrefused \
+       curl --retry 100 --retry-delay 60 --retry-connrefused \
        https://downloads.synpse.net/install.sh | VERSION=latest \
        AGENT_PROJECT=$AGENT_PROJECT \
        AGENT_REGISTRATION_TOKEN=$AGENT_REGISTRATION_TOKEN \
        AGENT_CONTROLLER_URI=https://cloud.synpse.net/api bash
     fi
 
-    # Install soft
     apt update
     apt-get install -y docker docker.io
 
-
-    # Stops the service only if the previous command was successful!
     systemctl enable docker.service
 
     apt-get install -y unattended-upgrades
@@ -44,7 +44,9 @@ write_files:
     RemainAfterExit=true
     StandardOutput=journal
   path: /etc/systemd/system/bootstrap.service
+  permissions: 0644
+  owner: root
 
 runcmd:
  - [ systemctl, daemon-reload ]
- - sleep 60 && reboot
+ - [ systemctl, start, bootstrap.service ]
