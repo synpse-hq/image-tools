@@ -34,7 +34,7 @@ write_files:
     [Install]
     WantedBy=multi-user.target
     [Unit]
-    Description=Installs Deviceplane
+    Description=Installs Synpse
     Wants=network-online.target
     After=network-online.target
     [Service]
@@ -47,4 +47,4 @@ write_files:
 
 runcmd:
  - [ systemctl, daemon-reload ]
- - reboot
+ - sleep 60 && reboot
