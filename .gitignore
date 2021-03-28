@@ -1,0 +1,4 @@
+assets/id_rsa*
+assets/images/*
+assets/cloud-init/*.cfg
+env

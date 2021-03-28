@@ -1,0 +1,50 @@
+write_files:
+ #We need way to restart failed bootstrap. either separate watcher service
+ #or autorestart on systemd until it completes and disables itself
+- content: |
+    #!/bin/bash
+    set -e
+
+    # Installs Synpse
+    if [ $(systemctl is-active synpse-agent) != "active" ]
+    then
+       curl --retry 10 --retry-delay 60 --retry-connrefused \
+       https://downloads.synpse.net/install.sh | VERSION=latest \
+       AGENT_PROJECT=$AGENT_PROJECT \
+       AGENT_REGISTRATION_TOKEN=$AGENT_REGISTRATION_TOKEN \
+       AGENT_CONTROLLER_URI=https://cloud.synpse.net/api bash
+    fi
+
+    # Install soft
+    apt update
+    apt-get install -y docker docker.io
+
+
+    # Stops the service only if the previous command was successful!
+    systemctl enable docker.service
+
+    apt-get install -y unattended-upgrades
+    systemctl start unattended-upgrades
+
+    systemctl disable bootstrap.service
+
+  permissions: '0755'
+  path: /opt/bootstrap.sh
+- content: |
+    [Install]
+    WantedBy=multi-user.target
+    [Unit]
+    Description=Installs Deviceplane
+    Wants=network-online.target
+    After=network-online.target
+    [Service]
+    Restart=on-failure
+    RestartSec=5s
+    ExecStart=/opt/bootstrap.sh
+    RemainAfterExit=true
+    StandardOutput=journal
+  path: /etc/systemd/system/bootstrap.service
+
+runcmd:
+ - [ systemctl, daemon-reload ]
+ - reboot

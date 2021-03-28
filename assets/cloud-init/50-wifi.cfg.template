@@ -1,0 +1,43 @@
+# Set your hostname here, the manage_etc_hosts will update the hosts file entries as well
+hostname: $DEVICE_HOSTNAME
+manage_etc_hosts: true
+
+# You could modify this for your own user information
+# TODO: Change root password
+users:
+  - name: $UNIX_USER
+    gecos: "Synpse"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    groups: users,docker,video,autologin,nopasswdlogin
+    plain_text_passwd: $UNIX_PASSWORD
+    lock_passwd: false
+    ssh_pwauth: true
+    chpasswd: { expire: false }
+    ssh_authorized_keys:
+      - $SSH_KEY
+
+# Set the locale of the system
+locale: $LOCALE
+
+# Set the timezone
+# Value of 'timezone' must exist in /usr/share/zoneinfo
+timezone: $TIMEZONE
+
+# WiFi connect to HotSpot
+network:
+  ethernets:
+    eth0:
+      dhcp4: true
+  version: 2
+  wifis:
+    wlan0:
+      access-points:
+        $WIFI_ACCESS_POINT_NAME:
+           password: $WIFI_ACCESS_POINT_PASSWORD
+      dhcp4: true
+
+runcmd:
+  - [ netplan, generate ]
+  - [ netplan, apply ]
+  - [ systemctl, daemon-reload ]
