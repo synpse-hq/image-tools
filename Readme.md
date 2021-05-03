@@ -1,13 +1,18 @@
-# Synpse Image builder agent
+# Synpse image tools
+
+Repository will contain helpers, tools and other misc to help users to build
+and maintain their device images. This is intende to be only helpers repo.
 
 Repository structure:
 
 ```
-/hack/ - Manual scripts
+/hack/ - Scripts
 /assets/ - All assets required to bootstrap
 ```
 
 ## Burn first Ubuntu RPI Synpse node
+
+! These scipts been tested on Linux based system. For other platforms - contributions are welcome !
 
 Copy `env.example` and update values based on what you want them be.
 
@@ -15,13 +20,13 @@ File should be named `env` and placed in the root project folder. It will be aut
 
 ```
 # Generate artifacts for image
-make generate
+`make generate`
 
 # Download base ubuntu image
-make download-base
+`make download-base`
 
 # Prepare image for burning
-make generate-image
+`make generate-image`
 ```
 
 Note: Once you start your device, bootstrapping happens in order:
