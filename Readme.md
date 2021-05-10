@@ -18,7 +18,13 @@ Copy `env.example` and update values based on what you want them be.
 
 File should be named `env` and placed in the root project folder. It will be automatically sourced by `make` commands.
 
+
+# Copy env file and construct your own
 ```
+cp env.example env
+<edit env file>
+```
+
 # Generate artifacts for image
 `make generate`
 

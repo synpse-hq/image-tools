@@ -10,5 +10,4 @@ download-base:
 	xz --decompress assets/images/ubuntu-20.04.2.img.xz
 
 generate-image:
-	source ./env && \
 	sudo ./hack/bootstrap/bootstrap_ubuntu.sh
